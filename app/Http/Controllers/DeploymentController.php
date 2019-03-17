@@ -32,6 +32,11 @@ class DeploymentController extends Controller
         }
     }
 
+    /**
+     * @param $payload
+     * @param $signature
+     * @return bool
+     */
     private function isFromGithub($payload,$signature)
     {
         return 'sha1=' . hash_hmac('sha1',$payload,env('GITHUB_DEPLOY_TOKEN'),false) === $signature;
