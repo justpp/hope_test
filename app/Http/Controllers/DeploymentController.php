@@ -11,6 +11,9 @@ use Illuminate\Http\Request;
 
 class DeploymentController extends Controller
 {
+    /**
+     * @param Request $request
+     */
     public function deploy(Request $request)
     {
         $commands = [
