@@ -32,6 +32,7 @@ class DeploymentController extends Controller
               abort(403);
           }
       } catch (\Exception $e){
+          // test
           file_put_contents('/usr/www/github.txt', $e . ' ', FILE_APPEND);
       }
 
