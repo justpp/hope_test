@@ -85,7 +85,7 @@
                 </div>
 
                 <div class="links">
-                   <h1>居居！~</h1>
+                   <h1>居居！~~</h1>
                 </div>
             </div>
         </div>
