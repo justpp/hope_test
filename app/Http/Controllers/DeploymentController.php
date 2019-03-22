@@ -31,13 +31,12 @@ class DeploymentController extends Controller
               http_response_code(200);
               touch('/usr/www/github.txt');
               datefmt_set_timezone('PRC');
-              file_put_contents('/usr/www/github.txt', Carbon::now(). 'pull'."\n", FILE_APPEND);
+              file_put_contents('/usr/www/github.txt', "\n".Carbon::now(). 'pull', FILE_APPEND);
           } else {
               abort(403);
           }
       } catch (\Exception $e){
-          // test
-          file_put_contents('/usr/www/github.txt', $e . "\n", FILE_APPEND);
+          file_put_contents('/usr/www/github.txt',  "\n".$e , FILE_APPEND);
       }
 
     }
