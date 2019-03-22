@@ -7,6 +7,7 @@
  */
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class DeploymentController extends Controller
@@ -28,6 +29,8 @@ class DeploymentController extends Controller
                   shell_exec($command);
               }
               http_response_code(200);
+              touch('/usr/www/github.txt');
+              file_put_contents('/usr/www/github.txt', Carbon::now(). 'pull', FILE_APPEND);
           } else {
               abort(403);
           }
