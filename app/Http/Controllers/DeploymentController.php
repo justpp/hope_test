@@ -30,13 +30,13 @@ class DeploymentController extends Controller
               }
               http_response_code(200);
               touch('/usr/www/github.txt');
-              file_put_contents('/usr/www/github.txt', Carbon::now(). 'pull', FILE_APPEND);
+              file_put_contents('/usr/www/github.txt', Carbon::now(). 'pull'."\n", FILE_APPEND);
           } else {
               abort(403);
           }
       } catch (\Exception $e){
           // test
-          file_put_contents('/usr/www/github.txt', $e . ' ', FILE_APPEND);
+          file_put_contents('/usr/www/github.txt', $e . "\n", FILE_APPEND);
       }
 
     }
