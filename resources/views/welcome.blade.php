@@ -78,14 +78,14 @@
                     @endauth
                 </div>
             @endif
-        
+
             <div class="content">
                 <div class="title m-b-md">
                     test ~  jj
                 </div>
 
                 <div class="links">
-                   <h1>居居！~~~</h1>
+                   <h1>{{\Carbon\Carbon::now()}}</h1>
                 </div>
             </div>
         </div>
