@@ -72,6 +72,9 @@ class RouteServiceProvider extends ServiceProvider
              ->group(base_path('routes/api.php'));
     }
 
+    /**
+     * Define the 'github'
+     */
     protected function mapGithubRoutes()
     {
         Route::prefix('github')
