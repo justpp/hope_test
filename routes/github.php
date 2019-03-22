@@ -6,4 +6,4 @@
  * Time: 15:18
  */
 
-Route::post('/deploy','DeploymentController@deploy');
+
