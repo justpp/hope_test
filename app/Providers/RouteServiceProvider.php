@@ -71,15 +71,4 @@ class RouteServiceProvider extends ServiceProvider
              ->namespace($this->namespace)
              ->group(base_path('routes/api.php'));
     }
-
-    /**
-     * Define the 'github'
-     */
-    protected function mapGithubRoutes()
-    {
-        Route::prefix('github')
-            ->middleware('github')
-            ->namespace($this->namespace)
-            ->group(base_path('routes/github.php'));
-    }
 }
