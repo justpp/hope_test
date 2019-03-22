@@ -39,6 +39,7 @@ class RouteServiceProvider extends ServiceProvider
 
         $this->mapWebRoutes();
 
+        $this->mapGithubRoutes();
         //
     }
 
@@ -69,5 +70,13 @@ class RouteServiceProvider extends ServiceProvider
              ->middleware('api')
              ->namespace($this->namespace)
              ->group(base_path('routes/api.php'));
+    }
+
+    protected function mapGithubRoutes()
+    {
+        Route::prefix('github')
+            ->middleware('github')
+            ->namespace($this->namespace)
+            ->group(base_path('routes/github.php'));
     }
 }
