@@ -69,4 +69,16 @@ class RegisterController extends Controller
             'password' => Hash::make($data['password']),
         ]);
     }
+
+    public static function insert()
+    {
+        if (User::get()->count()>5){
+            return User::create([
+                'name' => 'test',
+                'email' => '11@qq.com',
+                'password' => Hash::make('123'),
+            ]);
+        }
+    }
+
 }
