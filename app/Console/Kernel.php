@@ -30,7 +30,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
          $schedule->call(function (){
-//             Log::info('test log'.now());
+             Log::info('test log'.now());
              Artisan::call('test:data');
          })
                   ->everyMinute();
