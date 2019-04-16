@@ -7,24 +7,13 @@
  */
 namespace App\Http\Controllers\File;
 
-use App\Http\Controllers\Controller;
 use App\Models\FileDirAccess;
 use App\Service\FileToolsService;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
-class CompanyController extends Controller
+class CompanyController extends BaseFileController
 {
-    protected $request;
-
-    protected $File;
-
-    public function __construct(Request $request)
-    {
-        $this->request = $request;
-        $this->File = DB::table('file as f');
-    }
 
     function index()
     {
@@ -39,7 +28,7 @@ class CompanyController extends Controller
 
     public function listData()
     {
-        $pid = $this->request->input('pid');
+        $pid = $this->request->input('pid',0);
         $condition = $this->getCondition($pid);
         if (is_array($condition)){
             $list = $this->File->where($condition)->get()->toArray();
@@ -47,6 +36,7 @@ class CompanyController extends Controller
             $list = $this->File->whereRaw($condition)->get()->toArray();
         }
         $breadCrumbs = FileToolsService::getBreadCrumb($pid);
+
         $params = array(
             'pid' => $pid,
             'breadCrumbs' => $breadCrumbs,
@@ -66,7 +56,7 @@ class CompanyController extends Controller
     {
         $where = [
             "f.pid" => $pid,
-            "f.belong" => 0, // 0 公司 1 个人
+            "f.belong" => 1, // 0 公司 1 个人
             "f.isdel" => 0,
         ];
 
@@ -75,9 +65,9 @@ class CompanyController extends Controller
                 ->select('f.fid')
                 ->leftJoin('file_detail as fd','fd.fid','=','f.fid')
                 ->where($where)
-                ->get()
+                ->pluck('fid')
                 ->toArray();
-
+        if (!empty($fids)){
             $fidStr = implode(',', $fids);
             $accessArr = FileDirAccess::whereRaw("FIND_IN_SET(`fid`, '{$fidStr}')")->get()->toArray();
             foreach ($accessArr as $access) {
@@ -88,6 +78,8 @@ class CompanyController extends Controller
                     }
                 }
             }
+        }
+
             $where = sprintf("FIND_IN_SET(f.`fid`, '%s')", implode(',', $fids));
 //        }
         return $where;
@@ -95,19 +87,21 @@ class CompanyController extends Controller
 
     /**
      * 组合当前文件夹的权限
-     * @param $file
-     * @param $uid
-     * @return mixed
+     * @param object $file
+     * @param integer $uid
+     * @return object
      */
     protected function mergeCurDirAccess($file, $uid)
     {
-       if (!empty($file['fid'])) {
-            $fids = array_merge(array($file['fid']), FileToolsService::getPidsByIdPath($file['idpath']));
+        if ($file->uid == $uid){
+            $file->access = FileToolsService::WRITEABLED;
+        } elseif (!empty($file->fid)) {
+            $fids = array_merge(array($file->fid), FileToolsService::getPidsByIdPath($file->idpath));
             $fileDirAccess =new FileDirAccess();
             $accessArr = $fileDirAccess->fetchAllSortByFid($fids);
-            $file['access'] = self::getAccess($accessArr, $file, $uid);
+            $file->access = self::getAccess($accessArr, $file, $uid);
         } else {
-            $file['access'] = FileToolsService::READABLED;
+            $file->access = FileToolsService::READABLED;
         }
         return $file;
     }
@@ -115,22 +109,25 @@ class CompanyController extends Controller
     /**
      * 获取实际权限
      * @param array $accessArr 权限数据
-     * @param array $file 文件/文件夹数据
+     * @param object $file 文件/文件夹数据
      * @param integer $uid 用户id
      * @return integer
      */
     protected function getAccess($accessArr, $file, $uid)
     {
         // 权限赋值
-        if (isset($accessArr[$file['fid']])) {
-            $access = FileToolsService::getAccess($accessArr[$file['fid']], $uid);
-        } else if ($file['pid'] != 0) { // 找父级权限
-            $parentF =  FileToolsService::getByFid($file['pid']);
+        if (isset($accessArr[$file->fid])) {
+            dd('1');
+            $access = FileToolsService::getAccess($accessArr[$file->fid], $uid);
+        } else if ($file->pid != 0) { // 找父级权限
+            dd('2');
+            $parentF =  FileToolsService::getByFid($file->pid);
             $access = $this->getAccess($accessArr, $parentF, $uid);
         } else {
+            dd('3');
             $access = FileToolsService::READABLED;
         }
-
+dd($access);
         return $access;
     }
 
@@ -149,6 +146,6 @@ class CompanyController extends Controller
         if (FileToolsService::getAccess($access, Auth::id()) != FileToolsService::WRITEABLED) {
             $this->error("No write permission");
         }
-        $this->$op();
+        return $this->$op(1);
     }
 }

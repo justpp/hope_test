@@ -768,10 +768,10 @@ Ibos.app = (function() {
      */
     app.url = function(route, param) {
         route += "";
-        if ((route).split("/").length !== 3) {
+        if ((route).split("/").length < 0 ) {
             // $.error("app.url: 参数route错误");
         } else {
-            param = param ? '&' + $.param(param) : '';
+            param = param ? '?' + $.param(param) : '';
             return this.g("SITE_URL") + "/" + route + param;
         }
     };

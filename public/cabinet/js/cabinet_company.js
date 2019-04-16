@@ -97,6 +97,9 @@
 	// 公司网盘文件夹工具条视图类
 	Cb.CompanyFolderToolbar = Cb.FolderToolbar.extend({
 		getUploadUrl: function(){
+			console.log('upload this');
+			var _str = '234';
+			console.log(_str);
 			return Ibos.app.url('file/company/add', {
 					op: "upload",
 				pid: this.collection.pid || Ibos.app.g("pid") || "0",
@@ -117,7 +120,7 @@
 			var breadCrumb = new Cb.BreadcrumbView({
 				model: new Cb.BreadcrumbModel({
 					prefix: [{
-						path: Ibos.app.url("file/default/index"),
+						path: Ibos.app.url("file"),
 						name: Ibos.l("CABINET.CABINET")
 					}, {
 						path: "#",

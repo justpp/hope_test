@@ -55,23 +55,4 @@ class Controller extends BaseController
         return response()->json($result);
     }
 
-    /**
-     * 创建文件夹
-     * @param Request $request
-     */
-    protected function mkDir(Request $request)
-    {
-        $pid     = $request->input('pid');
-        $dirname = $request->input('name');
-        if (FileToolsService::isExist($dirname, $pid, Auth::id(), $this->cloudid, $this->belongType)) {
-            $this->ajaxReturn(array('isSuccess' => false, 'msg' => Ibos::lang('The samename folder exist')));
-        }
-        $fid = FileOperationApi::getInstance()->mkDir($this->getFileAttr($pid), $dirname);
-        if ($fid) {
-            $this->ajaxReturn(array('isSuccess' => true, 'msg' => Ibos::lang('Create succeed'), 'fid' => $fid));
-        } else {
-            $this->ajaxReturn(array('isSuccess' => false, 'msg' => Ibos::lang('Create failed')));
-        }
-    }
-
 }

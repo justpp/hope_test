@@ -18,6 +18,8 @@
 
     <link rel="stylesheet" href="{{asset('cabinet/css/skin/white.css')}}"/>
 
+    <link rel="stylesheet" href="{{asset('cabinet/js/lib/artDialog/skins/ibos.css')}}"/>
+
     <!-- IE8 fixed -->
     @yield('css')
     <!-- 语言包 -->

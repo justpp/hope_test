@@ -120,7 +120,7 @@
 		        			progress.setComplete();
 		        			progress.setStatus(U.lang("UPLOAD.UPLOAD_COMPLETE"));
 		        			progress.element.prepend('<i class="datt-icon"><img src="' + (data.imgUrl || data.icon || "") + '"/ width="44" height="44"></i>');
-		        			
+
 		        			cs.success && cs.success.call(this, file, data, response);
 		        		} else if (data.isSuccess === false) {
 		        			progress.setError();
@@ -131,10 +131,9 @@
 		        	}
 		        }
 		    }, opts));
-			
+
 		} else {
-			swfPath = Ibos.app.getStaticUrl("/js/lib/webuploader");
-			
+			swfPath = Ibos.app.getStaticUrl("/cabinet/js/lib/webuploader");
 			$.getScript(swfPath + "/webuploader.js")
 			.done(function(){
 

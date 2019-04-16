@@ -54,7 +54,7 @@ class FileToolsService
         if (!empty($fid)) {
             $dir = self::getByFid($fid);
 
-            $breadCrumbs = self::getParentsByIdPath($dir['idpath']);
+            $breadCrumbs = self::getParentsByIdPath($dir->idpath);
             array_push($breadCrumbs, $dir);
         }
         return array_values($breadCrumbs);
@@ -64,15 +64,15 @@ class FileToolsService
     /**
      * 根据fid获取一条文件数据
      * @param $fid
-     * @return array
+     * @return \Illuminate\Database\Eloquent\Model|\Illuminate\Database\Query\Builder|object|null
      */
     public static function getByFid($fid)
     {
         return DB::table('file as f')
+            ->select('*','f.fid as fid')
             ->leftJoin('file_detail as fd','f.fid','=','fd.fid')
             ->where('f.fid',$fid)
-            ->get()
-            ->toArray();
+            ->first();
     }
 
     /**
@@ -97,6 +97,9 @@ class FileToolsService
         $pids = array();
         if (preg_match('/^\/(\d+\/)+$/', $idPath)) {
             $idPath = str_replace('/0/', '', $idPath);
+            if (!$idPath){
+                return $pids;
+            }
             $pids = explode('/', trim($idPath, '/'));
         }
         return $pids;
@@ -111,7 +114,7 @@ class FileToolsService
             ->get()
             ->toArray();
         foreach ($re as $file) {
-            $re[$file['fid']] = $file;
+            $re[$file->fid] = $file;
         }
         return $re;
     }
@@ -164,15 +167,17 @@ class FileToolsService
     public static function getDirInfo($fid)
     {
         $file = self::getByFid($fid);
-        if (!empty($file)) {
-            if ($file['type'] == self::FOLDER) {
-                $file['size'] = self::countSizeByFid($file['fid']);
+        if ($file) {
+            if ($file->type == self::FOLDER) {
+                $file->size = self::countSizeByFid($file->fid);
             }
-            $file['formattedsize'] = StringUtilService::sizeCount($file['size']);
-            $file['formattedaddtime'] = date('Y/m/d', $file['addtime']);
+            $file->formattedsize = StringUtilService::sizeCount($file->size);
+            $file->formattedaddtime = date('Y/m/d', $file->addtime);
         } else {
-            $file['formattedsize'] = 0;
-            $file['formattedaddtime'] = '';
+            $file = (object)[];
+            $file->uid = 0;
+            $file->formattedsize = 0;
+            $file->formattedaddtime = '';
         }
         return $file;
     }
@@ -186,11 +191,10 @@ class FileToolsService
     {
         $fid = intval($fid);
         $size = DB::table('file')
-            ->sum('size')
-            ->where('idpath','like',"%$fid%")
+            ->selectRaw("sum(size) as s")
+            ->where('idpath','like',"%.'/'.$fid.'/'.%")
             ->first();
-
-        return intval($size);
+        return intval($size->s);
     }
 
     /**
@@ -215,6 +219,22 @@ class FileToolsService
             'belong'  => $belong
         ];
         $record = File::where($where)->first();
+
         return !empty($record);
     }
+
+    /**
+     * 创建文件夹
+     * @param object $fileAttr 文件属性对象
+     * @param string $dirName 文件夹名
+     * @return mixed
+     * @throws \Exception
+     */
+    public static function mkDir($fileAttr, $dirName)
+    {
+        $file = new  File();
+        $fid = $file->addDir($fileAttr->pid, $dirName, $fileAttr->uid, $fileAttr->belongType, $fileAttr->cloudid);
+        return $fid;
+    }
+
 }

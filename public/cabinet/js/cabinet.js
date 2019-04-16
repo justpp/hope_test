@@ -1609,7 +1609,7 @@
 			Cb.showAddFolderDialog({}, function(name){
 				$.post(view.getNewFolderUrl(), { pid: collection.pid, name: name }, function(res) {
 					if (res.isSuccess) {
-						window.location.href = "#pid/" + res.fid;
+						window.location.href = "#pid/" + res.data.fid;
 					} else {
 						Ui.tip(res.msg, "danger");
 					}
@@ -1620,7 +1620,6 @@
 		// 上传文件
 		upload: function(){
 			var collection = this.collection;
-
 			var dialog = Ibos.uploadDialog({
 				server: this.getUploadUrl(),
 				formData: {module: "file"},
