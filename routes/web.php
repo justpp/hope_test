@@ -12,6 +12,7 @@
 */
 
 Route::get('/', function () {
+
     return view('welcome');
 });
 
@@ -23,8 +24,7 @@ Route::get('/user/list', 'HomeController@userList');
 
 
 Route::group(['namespace'=>'File','prefix'=>'file','middleware'=>'auth'],function () {
-    // 首页
-    Route::get('/', 'IndexController@index');
+
 
     // 公司网盘
     Route::get('company', 'CompanyController@index');

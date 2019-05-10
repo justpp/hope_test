@@ -13,10 +13,8 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
-
 Route::post('/deploy','DeploymentController@deploy');
 
-Route::post('/userData','HomeController@userData');
+Route::post('/userData',function (){
+    dd(\App\User::all()->toArray());
+});
