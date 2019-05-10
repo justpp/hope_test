@@ -33,4 +33,11 @@ class HomeController extends Controller
 
         return view('users',compact('users'));
     }
+
+    public function userData()
+    {
+        $user = User::all();
+
+        return response()->json($user);
+    }
 }

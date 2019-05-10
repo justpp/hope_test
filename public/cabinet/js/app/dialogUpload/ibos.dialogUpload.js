@@ -89,7 +89,7 @@
 						uploadProgress: function (file, percent){
 		        	try {
 								var progress = new DProgress(this, file, this.options.custom_settings.containerId);
-								percent = Math.ceil(percent * 100)
+								percent = Math.ceil(percent * 100);
 
 		        		progress.setProgress(percent);
 		        		progress.setStatus(percent + " %...");
@@ -134,6 +134,7 @@
 
 		} else {
 			swfPath = Ibos.app.getStaticUrl("/cabinet/js/lib/webuploader");
+
 			$.getScript(swfPath + "/webuploader.js")
 			.done(function(){
 

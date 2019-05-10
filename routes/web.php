@@ -20,6 +20,7 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/user/list', 'HomeController@userList');
+Route::get('/user/data', 'HomeController@userData');
 
 Route::group(['namespace'=>'File','prefix'=>'file','middleware'=>'auth'],function () {
     // 首页
