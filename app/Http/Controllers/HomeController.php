@@ -38,6 +38,6 @@ class HomeController extends Controller
     {
         $user = User::all();
 
-        return response()->json($user);
+        return $this->jsonResult($user);
     }
 }
