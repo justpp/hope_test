@@ -16,5 +16,5 @@ use Illuminate\Http\Request;
 Route::post('/deploy','DeploymentController@deploy');
 
 Route::post('/userData',function (){
-    dd(\App\User::all()->toArray());
+    return \App\User::all()->toArray();
 });
